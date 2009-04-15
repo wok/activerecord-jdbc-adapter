@@ -314,7 +314,7 @@ module ::JdbcSpec
         end
       else
         if column && column.type == :primary_key
-          return value.to_s
+          return value.to_i.to_s
         end
         case value
         when String, ActiveSupport::Multibyte::Chars     : %Q{'#{quote_string(value)}'}
