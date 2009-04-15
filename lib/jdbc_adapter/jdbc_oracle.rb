@@ -313,7 +313,7 @@ module ::JdbcSpec
           %Q{empty_#{ column.sql_type.downcase rescue 'blob' }()}
         end
       else
-        if column && column.type == :primary_key
+        if column.respond_to?(:primary) && column.primary
           return value.to_i.to_s
         end
         case value
