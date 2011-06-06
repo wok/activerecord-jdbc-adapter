@@ -70,8 +70,12 @@ module ::ArJdbc
             if rest_of_query.strip!.first == '*'
               from_table = /.*FROM\s*\b(\w*)\b/i.match(rest_of_query).to_a[1]
             end
-            new_sql = "#{select} t.* FROM (SELECT ROW_NUMBER() OVER(#{order}) AS _row_num, #{from_table + '.' if from_table}#{rest_of_query}"
-            new_sql << ") AS t WHERE t._row_num BETWEEN #{start_row.to_s} AND #{end_row.to_s}"
+            if ( offset == 0 )
+              new_sql = "#{select} TOP (#{limit}) #{rest_of_query} #{order}"
+            else
+              new_sql = "#{select} t.* FROM (SELECT ROW_NUMBER() OVER(#{order}) AS _row_num, #{from_table + '.' if from_table}#{rest_of_query}"
+              new_sql << ") AS t WHERE t._row_num BETWEEN #{start_row.to_s} AND #{end_row.to_s}"
+            end
             sql.replace(new_sql)
           end
           sql
